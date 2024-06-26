@@ -73,29 +73,34 @@ impl EnigmaMachine {
 
     // encode process
     pub fn encode_charater(&mut self, c: char) -> char {
-        // first conver to usize
-        let char_in_usize = (c as u8 - b'A') as usize;
-
-        // rotate all rotor(if needed)
-        self.rotors[0].borrow_mut().rotate();
-
-        // convert in plugboard
-        let step1 = self.plug_board.encode_index(char_in_usize);
-
-        // encode in rotors
-        let step2 = self.rotors[0].borrow().encode_forward_index(step1);
-
-        // in reflector
-        let reflect_index = self.reflector.encode_index(step2);
-
-        // encode in rotors (backward)
-        let last_rotor = self.rotors.last().unwrap().borrow();
-        let step3 = last_rotor.encode_backward_index(reflect_index);
-
-        // finally in plugboard
-        let last = self.plug_board.encode_index(step3);
-
-        return (last as u8 + b'A') as char;
+        if self.rotors.len() == 0 {
+            // if there is no rotor, return char itself
+            return c;
+        } else {
+            // first conver to usize
+            let char_in_usize = (c as u8 - b'A') as usize;
+    
+            // rotate all rotor(if needed)
+            self.rotors[0].borrow_mut().rotate();
+    
+            // convert in plugboard
+            let step1 = self.plug_board.encode_index(char_in_usize);
+    
+            // encode in rotors
+            let step2 = self.rotors[0].borrow().encode_forward_index(step1);
+    
+            // in reflector
+            let reflect_index = self.reflector.encode_index(step2);
+    
+            // encode in rotors (backward)
+            let last_rotor = self.rotors.last().unwrap().borrow();
+            let step3 = last_rotor.encode_backward_index(reflect_index);
+    
+            // finally in plugboard
+            let last = self.plug_board.encode_index(step3);
+    
+            return (last as u8 + b'A') as char;
+        }
     }
 
     // same but will encode a str
