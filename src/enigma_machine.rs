@@ -24,7 +24,7 @@ impl EnigmaMachine {
         // first get one with no rotor init.
         let mut ret = Self::new_with_reflector_and_empty_rotors(reflector_setting_str);
 
-        // chain all rotor that is created base on the setting it given up.
+        // chain all rotor that is created base on the setting it is given.
         let mut pre_rotor: Option<Rc<RefCell<EnigmaRotor>>> = None;
         ret.rotors = rotor_settings
             .iter()
